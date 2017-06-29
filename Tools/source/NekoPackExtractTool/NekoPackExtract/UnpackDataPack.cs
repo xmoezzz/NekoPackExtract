@@ -136,7 +136,19 @@ namespace NekoPackExtract
         private byte[] OggsSign = new byte[4] { 0x4f, 0x67, 0x67, 0x53 };
         private byte[] PngSign = new byte[4] { 0x89, 0x50, 0x4e, 0x47 };
         private byte[] MngSign = new byte[4] { 0x8a, 0x4d, 0x4e, 0x47 };
-        
+        private byte[] PsdSign = new byte[4] { 0x38, 0x42, 0x50, 0x53 };
+
+
+        private bool IsTextFile(byte[] Buffer)
+        {
+            for(var i = 0; i < Buffer.Length; i++)
+            {
+                if (Buffer[i] == 0)
+                    return false;
+            }
+            return true;
+        }
+
         public bool Unpack(object Args)
         {
             var CurrentPath = Path.ChangeExtension(m_FileName, null);
@@ -156,10 +168,6 @@ namespace NekoPackExtract
                     byte[] ChunkBuffer = null;
 
                     ReadBuffer(NtFile, ref ChunkBuffer, ref ChunkSize);
-
-                    var MyFile = new FileStream("index", FileMode.Create);
-                    MyFile.Write(ChunkBuffer, 0, (int)ChunkSize);
-                    MyFile.Close();
 
                     fixed(byte* buff = &ChunkBuffer[0])
                     {
@@ -188,17 +196,22 @@ namespace NekoPackExtract
                                 ReadBuffer(NtFile, ref FileBuffer, ref FileSize);
 
                                 bool IsMng = false;
-                                var FileName = string.Format("{0:000000}_{1:000000}", i, j);
+                                //var FileName = string.Format("{0:000000}_{1:000000}", i, j);
+                                var FileName = string.Format("{0:d}_{1:X00000000}", i, Item.NameHash);
 
                                 if (CompareArray(OggsSign, FileBuffer, (uint)OggsSign.Count()))
                                     FileName += ".ogg";
                                 else if (CompareArray(PngSign, FileBuffer, (uint)PngSign.Count()))
                                     FileName += ".png";
+                                else if (CompareArray(PsdSign, FileBuffer, (uint)PsdSign.Count()))
+                                    FileName += ".psd";
                                 else if (CompareArray(MngSign, FileBuffer, (uint)MngSign.Count()))
                                 {
                                     FileName += ".mng";
                                     IsMng = true;
                                 }
+                                else if (IsTextFile(FileBuffer))
+                                    FileName += ".txt";
 
                                 var DirectoryName = Path.ChangeExtension(m_FileName, null);
                                 if (!Directory.Exists(DirectoryName))
