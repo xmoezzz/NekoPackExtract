@@ -1,9 +1,6 @@
 # NekoPackExtract
 NekoPackExtract : A tool that can extract almost all resources used by NekoPack Engine(Chartreux Inc) and repack some of them for translation.
 
-## NokePack
-All archives used by this 
-
 
 ## How To Extract
 ![Main Window](https://github.com/xmoeproject/NekoPackExtract/blob/master/Image/tool.jpg)    
