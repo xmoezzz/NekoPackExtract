@@ -1,0 +1,5 @@
+E:\MNGUnpackerNet\MNGUnpackerNet\bin\Release\MNGUnpackerNet.exe
+E:\MNGUnpackerNet\MNGUnpackerNet\bin\Release\MNGUnpackerNet.pdb
+E:\MNGUnpackerNet\MNGUnpackerNet\obj\Release\MNGUnpackerNet.csprojResolveAssemblyReference.cache
+E:\MNGUnpackerNet\MNGUnpackerNet\obj\Release\MNGUnpackerNet.exe
+E:\MNGUnpackerNet\MNGUnpackerNet\obj\Release\MNGUnpackerNet.pdb
