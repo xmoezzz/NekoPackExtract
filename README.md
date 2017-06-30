@@ -12,6 +12,10 @@ NekoPackExtract : A tool that can extract almost all resources used by NekoPack 
 - run NekoPackRebuilder.exe in command prompt with parameters: NekoPackRebuilder.exe original.dat full/path/to/repacking/directory output.dat  
 - eg: NekoPackRebuilder.exe system.dat E:\NekoPackRebuilder\Release\system output.dat
 
+## How To Repack MNG Images
+- install ImageMagick
+- execute RepackMNG.bat
+
 ## Supported resource types
 - Archive： *.dat(sig : NEKOPACK)
 - Images : *.mng

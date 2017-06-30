@@ -1,0 +1,1 @@
+convert -append *.png aout.mng
