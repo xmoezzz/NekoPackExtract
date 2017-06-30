@@ -139,9 +139,9 @@ namespace NekoPackExtract
         private byte[] PsdSign = new byte[4] { 0x38, 0x42, 0x50, 0x53 };
 
 
-        private bool IsTextFile(byte[] Buffer)
+        private bool IsTextFile(byte[] Buffer, uint Length)
         {
-            for(var i = 0; i < Buffer.Length; i++)
+            for(var i = 0; i < Length; i++)
             {
                 if (Buffer[i] == 0)
                     return false;
@@ -210,7 +210,7 @@ namespace NekoPackExtract
                                     FileName += ".mng";
                                     IsMng = true;
                                 }
-                                else if (IsTextFile(FileBuffer))
+                                else if (IsTextFile(FileBuffer, FileSize))
                                     FileName += ".txt";
 
                                 var DirectoryName = Path.ChangeExtension(m_FileName, null);
