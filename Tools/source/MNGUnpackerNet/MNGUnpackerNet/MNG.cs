@@ -8,7 +8,7 @@ using System.IO;
 namespace SprinterPublishing
 {
 
-    internal class Utils
+    public class Utils
     {
         /// <summary>
         /// Attempts to read count bytes of data from the supplied stream.
@@ -72,7 +72,7 @@ namespace SprinterPublishing
         }
     }
 
-    internal class MNGHeader
+    public class MNGHeader
     {
         /// <summary>
         /// The first 8 bytes of an MNG encoding
@@ -128,7 +128,7 @@ namespace SprinterPublishing
         }
     }
 
-    internal class MENDChunk : MNGChunk
+    public class MENDChunk : MNGChunk
     {
         /// <summary>
         /// The ASCII name of the MNG chunk
@@ -145,7 +145,7 @@ namespace SprinterPublishing
         }
     }
 
-    internal class TERMChunk : MNGChunk
+    public class TERMChunk : MNGChunk
     {
         /// <summary>
         /// The ASCII name of the MNG chunk
@@ -185,7 +185,7 @@ namespace SprinterPublishing
         }
     }
 
-    internal class BKGDChunk : MNGChunk
+    public class BKGDChunk : MNGChunk
     {
         /// <summary>
         /// The ASCII name of the MNG chunk
@@ -202,7 +202,7 @@ namespace SprinterPublishing
         }
     }
 
-    internal class BACKChunk : MNGChunk
+    public class BACKChunk : MNGChunk
     {
         /// <summary>
         /// The ASCII name of the MNG chunk
@@ -255,7 +255,7 @@ namespace SprinterPublishing
         }
     }
 
-    internal class IHDRChunk : MNGChunk
+    public class IHDRChunk : MNGChunk
     {
         /// <summary>
         /// The ASCII name of the MNG chunk
@@ -297,7 +297,7 @@ namespace SprinterPublishing
         }
     }
 
-    internal class PLTEChunk : MNGChunk
+    public class PLTEChunk : MNGChunk
     {
         /// <summary>
         /// The ASCII name of the MNG chunk
@@ -320,7 +320,7 @@ namespace SprinterPublishing
 
     }
 
-    internal class IENDChunk : MNGChunk
+    public class IENDChunk : MNGChunk
     {
         /// <summary>
         /// The ASCII name of the MNG chunk
@@ -337,7 +337,7 @@ namespace SprinterPublishing
         }
     }
 
-    internal class IDATChunk : MNGChunk
+    public class IDATChunk : MNGChunk
     {
         /// <summary>
         /// The ASCII name of the MNG chunk
@@ -354,7 +354,7 @@ namespace SprinterPublishing
         }
     }
 
-    internal class MHDRChunk : MNGChunk
+    public class MHDRChunk : MNGChunk
     {
         /// <summary>
         /// The ASCII name of the MNG chunk
@@ -433,7 +433,7 @@ namespace SprinterPublishing
         }
     }
 
-    internal class MNGChunk
+    public class MNGChunk
     {
         protected String error;
         protected byte[] chunkLength;
@@ -594,7 +594,7 @@ namespace SprinterPublishing
         }
     }
 
-    internal class PNG
+    public class PNG
     {
         /// <summary>
         /// The PNG file signature
@@ -616,6 +616,18 @@ namespace SprinterPublishing
         /// The PNG file's IEND chunk
         /// </summary>
         private IENDChunk iend;
+
+        private string Name = null;
+
+        public void SetName(string FrameName)
+        {
+            Name = FrameName;
+        }
+
+        public string GetName()
+        {
+            return Name;
+        }
 
         /// <summary>
         /// Default constructor
@@ -697,7 +709,7 @@ namespace SprinterPublishing
         /// <summary>
         /// List of PNGs embedded in the MNG
         /// </summary>
-        List<PNG> pngs;
+        public List<PNG> pngs;
         /// <summary>
         /// The MNG's MHDRChunk
         /// </summary>
@@ -738,6 +750,19 @@ namespace SprinterPublishing
             foreach (MNGChunk chunk in chunks)
                 sb.AppendLine(chunk.ChunkType);
             return sb.ToString();
+        }
+
+
+        private int GetStrlenInChunk(byte[] Buf)
+        {
+            int Len = 0;
+            for(int i = 1; i < Buf.Length; i++)
+            {
+                if (Buf[i] == 0)
+                    break;
+                Len++;
+            }
+            return Len;
         }
 
         /// <summary>
@@ -824,10 +849,18 @@ namespace SprinterPublishing
                         else
                             globalPLTE = chunk as PLTEChunk;
                         break;
+                    case "FRAM":
+                        png = new PNG();
+                        string FileName = System.Text.Encoding.GetEncoding("shift_jis").GetString(chunk.ChunkData, 1, GetStrlenInChunk(chunk.ChunkData));
+                        System.Console.WriteLine(FileName);
+                        if (FileName != null && FileName.Length > 0)
+                            png.SetName(FileName);
+
+                        break;
                     case IHDRChunk.NAME:
                         chunk = new IHDRChunk(chunk);
                         // This is the beginning of a new embedded PNG
-                        png = new PNG();
+                        //png = new PNG();
                         png.IHDR = chunk as IHDRChunk;
                         break;
                     case IDATChunk.NAME:

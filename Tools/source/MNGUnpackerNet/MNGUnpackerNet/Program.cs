@@ -27,7 +27,13 @@ namespace MNGUnpackerNet
             for(int i = 0; i < Count; i++)
             {
                 var bitmap = Loader.ToBitmap(i);
-                bitmap.Save(Path.Combine(outdir, string.Format("{0:0000}.png", i)), System.Drawing.Imaging.ImageFormat.Png);
+
+                var FileName = Loader.pngs[i].GetName();
+                //System.Console.WriteLine(FileName);
+                if (FileName != null && FileName.Length > 0)
+                    bitmap.Save(Path.Combine(outdir, FileName + ".png"), System.Drawing.Imaging.ImageFormat.Png);
+                else
+                    bitmap.Save(Path.Combine(outdir, string.Format("{0:0000}.png", i)), System.Drawing.Imaging.ImageFormat.Png);
             }
         }
     }
